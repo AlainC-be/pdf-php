@@ -1130,8 +1130,11 @@ class Cpdf
                         $tmp = gzcompress($tmp, $this->options['compression']);
                         $res .= ' /Filter /FlateDecode';
                     }
-
-                        $res .= ' /Length '.mb_strlen($tmp, '8bit')." >>\nstream\n$tmp\nendstream";
+                    if ($this->encryptionMode > 0) { 
+                        $this->encryptInit($id); 
+                        $tmp = $this->ARC4($tmp); 
+                    }
+                    $res .= ' /Length '.mb_strlen($tmp, '8bit')." >>\nstream\n$tmp\nendstream";
                 }
 
                   $res .= "\nendobj";
